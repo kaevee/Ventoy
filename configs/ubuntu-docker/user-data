@@ -1,6 +1,6 @@
 #cloud-config
 autoinstall:
-  version: 1
+  version: 2
   source:
     id: ubuntu-server-minimal
 
@@ -26,6 +26,7 @@ autoinstall:
     - ufw
     - iputils-ping
     - bind9-dnsutils
+    - ca-certificates
     - curl
     - wget
     - net-tools
@@ -33,12 +34,17 @@ autoinstall:
     - lsof
     - vim
     - unzip
-    - docker.io
-    - docker-compose-v2
 
   late-commands:
     - curtin in-target --target=/target -- ufw allow OpenSSH
     - curtin in-target --target=/target -- ufw --force enable
+    # Install Docker CE from official Docker repository
+    - curtin in-target --target=/target -- install -m 0755 -d /etc/apt/keyrings
+    - curtin in-target --target=/target -- sh -c "curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc"
+    - curtin in-target --target=/target -- chmod a+r /etc/apt/keyrings/docker.asc
+    - curtin in-target --target=/target -- sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo ${UBUNTU_CODENAME:-$VERSION_CODENAME}) stable" > /etc/apt/sources.list.d/docker.list'
+    - curtin in-target --target=/target -- apt-get update
+    - curtin in-target --target=/target -- apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     - curtin in-target --target=/target -- usermod -aG docker sysadmin
 
   storage:

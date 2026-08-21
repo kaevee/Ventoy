@@ -1,6 +1,6 @@
 #cloud-config
 autoinstall:
-  version: 1
+  version: 2
   source:
     id: ubuntu-server-minimal
 

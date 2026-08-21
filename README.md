@@ -1,6 +1,6 @@
 # Ventoy Autoinstall Seed Images
 
-Pre-built [cloud-init](https://cloud-init.io/) autoinstall images for unattended Ubuntu Server 22.04 installations via [Ventoy](https://www.ventoy.net/).
+Pre-built [cloud-init](https://cloud-init.io/) autoinstall images for unattended Ubuntu Server 26.04 installations via [Ventoy](https://www.ventoy.net/).
 
 ## Download
 
@@ -11,7 +11,7 @@ Grab the latest `base.img`, `docker.img`, and `ventoy.json` from the [Releases](
 | Variant | Hostname | Description |
 |---------|----------|-------------|
 | **base** | `ubuntu-minimal` | Minimal Ubuntu Server with core tools (curl, wget, htop, vim, etc.), SSH, and UFW |
-| **docker** | `ubuntu-docker` | Base + Docker Engine and Docker Compose v2 |
+| **docker** | `ubuntu-docker` | Base + [Docker CE](https://docs.docker.com/engine/install/ubuntu/) with Buildx and Compose plugins |
 
 Both variants create a `sysadmin` user with SSH access and UFW enabled.
 
@@ -50,23 +50,32 @@ Both scripts produce `.img` files in the `build/` directory.
 
 ## Deploying to Ventoy USB
 
-1. Copy the ISO to your Ventoy USB:
-   ```
-   <USB>/iso/ubuntu-22.04-live-server-amd64.iso
-   ```
+### Quick Install (from GitHub Releases)
 
-2. Copy the autoinstall images:
+**PowerShell (Windows):**
+```powershell
+iex "& { $(irm https://raw.githubusercontent.com/kaevee/Ventoy/main/scripts/install.ps1) } -Drive D:"
+```
+
+**Bash (Linux/macOS):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/kaevee/Ventoy/main/scripts/install.sh | bash -s -- /mnt/usb
+```
+
+This downloads the latest release and places everything in the right directories on your Ventoy USB.
+
+### Manual Install
+
+1. Download `base.img`, `docker.img`, and `ventoy.json` from the [Releases](https://github.com/kaevee/Ventoy/releases) page.
+
+2. Copy them to your Ventoy USB:
    ```
+   <USB>/ventoy/ventoy.json
    <USB>/ventoy/autoinstall/base.img
    <USB>/ventoy/autoinstall/docker.img
    ```
 
-3. Copy the Ventoy config:
-   ```
-   <USB>/ventoy/ventoy.json
-   ```
-
-4. Boot from the USB — Ventoy will prompt you to choose a template (base or docker) for the unattended install.
+3. Boot from the USB — Ventoy will prompt you to choose a template (base or docker) for the unattended install.
 
 ## Default Credentials
 
@@ -98,7 +107,9 @@ Then replace the `password` field in `configs/ubuntu-*/user-data`.
 │       └── meta-data
 ├── scripts/
 │   ├── build.ps1                 # Windows build script (WSL)
-│   └── build.sh                  # Linux build script
+│   ├── build.sh                  # Linux build script
+│   ├── install.ps1               # Windows installer (from GitHub Releases)
+│   └── install.sh                # Linux/macOS installer (from GitHub Releases)
 └── build/                        # Output directory (git-ignored)
 ```
 
