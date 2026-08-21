@@ -2,6 +2,10 @@
 
 Pre-built [cloud-init](https://cloud-init.io/) autoinstall images for unattended Ubuntu Server 22.04 installations via [Ventoy](https://www.ventoy.net/).
 
+## Download
+
+Grab the latest `base.img`, `docker.img`, and `ventoy.json` from the [Releases](https://github.com/kaevee/Ventoy/releases) page — no build needed.
+
 ## Variants
 
 | Variant | Hostname | Description |
@@ -81,7 +85,9 @@ Then replace the `password` field in `configs/ubuntu-*/user-data`.
 ## Project Structure
 
 ```
-├── .github/workflows/build.yml   # CI: builds images on push/PR
+├── .github/workflows/
+│   ├── build.yml                 # CI: validates + builds on push/PR
+│   └── release.yml               # CD: publishes to GitHub Releases on tags
 ├── configs/
 │   ├── ventoy.json               # Ventoy auto_install mapping
 │   ├── ubuntu-base/              # Base variant cloud-init
@@ -98,4 +104,13 @@ Then replace the `password` field in `configs/ubuntu-*/user-data`.
 
 ## CI
 
-The GitHub Actions workflow automatically builds the `.img` files on every push/PR to `main`/`master`. Artifacts are available for download for 7 days.
+| Workflow | Trigger | What it does |
+|----------|---------|--------------|
+| **Build** | Push/PR to `main`/`master` | Validates configs, builds images, uploads as workflow artifacts (7-day retention) |
+| **Release** | Push a `v*` tag | Builds images and publishes them as GitHub Release assets |
+
+To publish a release:
+```powershell
+git tag v1.0.0
+git push origin v1.0.0
+```
