@@ -18,20 +18,19 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y dosfstools mtools
+          sudo apt-get install -y dosfstools mtools cloud-init
 
-      - name: Build Base Variant
+      - name: Validate cloud-init configs
         run: |
-          mkdir -p build
-          truncate -s 2M build/base.img
-          mkfs.vfat -n cidata build/base.img
-          mcopy -i build/base.img configs/ubuntu-base/user-data configs/ubuntu-base/meta-data ::
+          for variant in base docker; do
+            echo "Validating ubuntu-$variant/user-data..."
+            cloud-init schema --config-file "configs/ubuntu-$variant/user-data" || true
+          done
 
-      - name: Build Docker Variant
+      - name: Build images
         run: |
-          truncate -s 2M build/docker.img
-          mkfs.vfat -n cidata build/docker.img
-          mcopy -i build/docker.img configs/ubuntu-docker/user-data configs/ubuntu-docker/meta-data ::
+          chmod +x scripts/build.sh
+          scripts/build.sh
 
       - name: Prepare Artifacts
         run: |

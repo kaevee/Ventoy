@@ -21,7 +21,7 @@ foreach ($Variant in $Variants) {
     } catch {
         Write-Error "WSL is not installed or not running. Please install WSL (wsl --install) to build the .img files on Windows."
         Pop-Location
-        exit
+        exit 1
     }
 
     # Remove old image if it exists

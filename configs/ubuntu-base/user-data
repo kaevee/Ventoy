@@ -7,9 +7,9 @@ autoinstall:
   identity:
     hostname: ubuntu-minimal
     username: sysadmin
-    # Default password is 'password'. Change this before production!
+    # Default password is 'changeme'. Change this before production!
     # Generate hash with: openssl passwd -6
-    password: "$6$rounds=4096$FhW5L2.n2uQ3rGqG$FzH6lU9V/...snip.../5h7pT6H1"
+    password: "$6$rounds=4096$FhW5L2.n2uQ3rGqG$g7Bsih1xy606vJfi68M0xgwR/fgPMo1PCWtxinwuT3ZJStjo.4LO4vQy0XB.9cf4teJBxTkX5ARYDxf7Adm8k/"
 
   network:
     version: 2
@@ -19,7 +19,7 @@ autoinstall:
 
   ssh:
     install-server: true
-    allow-pw: true 
+    allow-pw: true
 
   packages:
     - openssh-server
