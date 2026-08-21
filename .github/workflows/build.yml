@@ -1,0 +1,45 @@
+name: Build Ventoy Seed Images
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dosfstools mtools
+
+      - name: Build Base Variant
+        run: |
+          mkdir -p build
+          truncate -s 2M build/base.img
+          mkfs.vfat -n cidata build/base.img
+          mcopy -i build/base.img configs/ubuntu-base/user-data configs/ubuntu-base/meta-data ::
+
+      - name: Build Docker Variant
+        run: |
+          truncate -s 2M build/docker.img
+          mkfs.vfat -n cidata build/docker.img
+          mcopy -i build/docker.img configs/ubuntu-docker/user-data configs/ubuntu-docker/meta-data ::
+
+      - name: Prepare Artifacts
+        run: |
+          cp configs/ventoy.json build/
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ventoy-autoinstall-artifacts
+          path: build/
+          retention-days: 7

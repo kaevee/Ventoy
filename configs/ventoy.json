@@ -1,0 +1,11 @@
+{
+  "auto_install": [
+    {
+      "image": "/iso/ubuntu-22.04-live-server-amd64.iso",
+      "template": [
+        "/ventoy/autoinstall/base.img",
+        "/ventoy/autoinstall/docker.img"
+      ]
+    }
+  ]
+}

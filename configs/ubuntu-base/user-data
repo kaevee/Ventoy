@@ -1,0 +1,43 @@
+#cloud-config
+autoinstall:
+  version: 1
+  source:
+    id: ubuntu-server-minimal
+
+  identity:
+    hostname: ubuntu-minimal
+    username: sysadmin
+    # Default password is 'password'. Change this before production!
+    # Generate hash with: openssl passwd -6
+    password: "$6$rounds=4096$FhW5L2.n2uQ3rGqG$FzH6lU9V/...snip.../5h7pT6H1"
+
+  network:
+    version: 2
+    ethernets:
+      eth0:
+        dhcp4: true
+
+  ssh:
+    install-server: true
+    allow-pw: true 
+
+  packages:
+    - openssh-server
+    - ufw
+    - iputils-ping
+    - bind9-dnsutils
+    - curl
+    - wget
+    - net-tools
+    - htop
+    - lsof
+    - vim
+    - unzip
+
+  late-commands:
+    - curtin in-target --target=/target -- ufw allow OpenSSH
+    - curtin in-target --target=/target -- ufw --force enable
+
+  storage:
+    layout:
+      name: lvm
