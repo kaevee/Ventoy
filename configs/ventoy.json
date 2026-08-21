@@ -1,4 +1,12 @@
 {
+  "image_list": [
+    {
+      "type": "exclude",
+      "list": [
+        "/ventoy/autoinstall/"
+      ]
+    }
+  ],
   "auto_install": [
     {
       "image": "/ubuntu-26.04-live-server-amd64.iso",
