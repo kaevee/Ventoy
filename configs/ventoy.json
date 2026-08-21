@@ -1,11 +1,6 @@
 {
-  "image_list": [
-    {
-      "type": "exclude",
-      "list": [
-        "/ventoy/autoinstall/"
-      ]
-    }
+  "control": [
+    { "VTOY_IMG_SHOW_ALL": "0" }
   ],
   "auto_install": [
     {
